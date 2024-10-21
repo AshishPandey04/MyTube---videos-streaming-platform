@@ -1,15 +1,20 @@
 {
   "name": "mytube",
   "version": "1.0.0",
-  "description": "MyTube is a vedio streaming platform",
+  "description": "MyTube is a videos streaming platform",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    
+    "dev":"nodemon src/index.js"
   },
   "keywords": [
     "javascript",
     "backend"
   ],
   "author": "Ashish Kumar Pandey",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
 }
