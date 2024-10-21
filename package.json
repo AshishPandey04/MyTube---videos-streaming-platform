@@ -1,0 +1,15 @@
+{
+  "name": "mytube",
+  "version": "1.0.0",
+  "description": "MyTube is a vedio streaming platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "author": "Ashish Kumar Pandey",
+  "license": "ISC"
+}
