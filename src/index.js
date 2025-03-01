@@ -1,13 +1,14 @@
 // require('dotenv').config({path:'./env'})
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
 dotenv.config({
   path: './env'
 })
 
 
-
+const port = process.env.PORT || 8001
 connectDB() // return a promise isliye use .then and .catch se impliment kiya hain, .then matalb agar ho gya toh kya hoga and .catch me error
   .then(() => {
     app.on("error", (error) => {
@@ -15,8 +16,8 @@ connectDB() // return a promise isliye use .then and .catch se impliment kiya ha
       throw error
 
     })
-    app.listen(process.env.PORT || 8000, () => {
-      console.log(`Server is running at port at ${process.env.PORT}`)
+    app.listen(port, () => {
+      console.log(`Server is running at port at ${port}`)
     })
   })
   .catch((error) => {
