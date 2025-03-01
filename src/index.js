@@ -8,7 +8,7 @@ dotenv.config({
 
 
 
-connectDB()
+connectDB() // return a promise isliye use .then and .catch se impliment kiya hain, .then matalb agar ho gya toh kya hoga and .catch me error
   .then(() => {
     app.on("error", (error) => {
       console.log("Error ::", error)
