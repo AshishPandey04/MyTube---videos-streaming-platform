@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
    if (password === "") {
       throw new ApiError(400, "password is required")
    }
-   const exitedUser=User.findOne({
+   const exitedUser= await User.findOne({
       $or: [{username},{email}]
    })
    if(exitedUser){
@@ -45,7 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
    }
 
    const avatarLocalPath = req.files?.avatar[0]?.path;
-   const coverImageLocalPath=req.files?.coverImage[0]?.path;
+   //const coverImageLocalPath=req.files?.coverImage[0]?.path;
+   let coverImageLocalPath;
+   if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+      coverImageLocalPath=req.files.coverImage[0].path
+   }
 
    if(!avatarLocalPath){
       throw new ApiError(400,"Avatar is required")
@@ -54,27 +58,26 @@ const registerUser = asyncHandler(async (req, res) => {
    const avatar= await uploadOnCloudinary(avatarLocalPath)
    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
-   const user=User.create({
-      username:username.toLowerCase(),
-      email,
-      password,
+   const user = await User.create({
       fullName,
-      avatar:avatar.url,
-      coverImage:coverImage?.url||""
+      avatar: avatar.url,
+      coverImage: coverImage?.url || "",
+      email, 
+      password,
+      username: username.toLowerCase()
+  })
 
-   })
-
-   const createdUser= await User.findById(user._id).select(
+  const createdUser = await User.findById(user._id).select(
       "-password -refreshToken"
-   )
-   if(!createdUser){
-      throw new ApiError(500,"Something went wrong while registering the user")
+  )
 
-   }
+  if (!createdUser) {
+      throw new ApiError(500, "Something went wrong while registering the user")
+  }
 
-   return res.status(201).json({
-      new ApiResponse(200,createdUser,"User registered Successfully")
-   })
+  return res.status(201).json(
+      new ApiResponse(200, createdUser, "User registered Successfully")
+  )
 
 
 
