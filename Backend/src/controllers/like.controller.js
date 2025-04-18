@@ -118,6 +118,66 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 const getLikedVideos = asyncHandler(async (req, res) => {
     //TODO: get all liked videos
 
+    if(!req.user){
+        throw new ApiError(400,"Login to see Liked Videos")
+    }
+
+    const likedVideos = await Like.aggregate([
+        {
+            $match:{
+                likedBy:req.user._id
+            }
+        },{
+            $lookup:{
+                from:"videos",
+                localField:"video",
+                foreignField:"_id",
+                as:"video",
+                pipeline:[
+                    {
+                       $lookup:{
+                          from:"users",
+                          localField:"owner",
+                          foreignField:"_id",
+                          as:"owner",
+                          pipeline:[
+                             {
+                                $project:{
+                                   fullName:1,
+                                   username:1,
+                                   avatar:1
+                                }
+                             }
+                          ]
+                       }
+                    },
+                    {
+                       $addFields:{
+                          owner:{
+                             $first:"$owner"
+                          }
+                       }
+                    }
+                 ]
+            }
+        },
+        {
+            $unwind: "$video" // 💥 take out video from array
+        },
+        {
+            $replaceRoot: { newRoot: "$video" } // 💥 replace root with video document itself
+        }
+    ])
+
+    if(!likedVideos){
+        throw new ApiError(400,"something went wrong while fetching liked videos")
+    }
+
+    return res.status(200)
+    .json(
+        new ApiResponse(200,likedVideos,"liked videos fetched successfully")
+    )
+
 })
 
 export {
