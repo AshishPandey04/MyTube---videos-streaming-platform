@@ -3,7 +3,7 @@ import mongoose ,{Schema}from "mongoose";
 const playlistSchema = new Schema({
 
     name:{
-        type:string,
+        type:String,
         required:true
     },
     description:{
