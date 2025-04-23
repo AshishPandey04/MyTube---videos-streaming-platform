@@ -30,7 +30,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
   
     const totalViews = totalViewsAggregation[0]?.totalViews || 0;
   
-    res.status(200).json(
+   return res.status(200).json(
       new ApiResponse(
         200,
         {
@@ -62,7 +62,7 @@ const getChannelVideos = asyncHandler(async (req, res) => {
       throw new ApiError(404, "Videos not found");
     }
   
-    res
+   return res
       .status(200)
       .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
 })
