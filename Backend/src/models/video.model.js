@@ -29,12 +29,12 @@ const videoSchema = new mongoose.Schema({
         type: Number, //cloudnary
         required: true
     },
-    view: {
+    views: {
         type: Number,
         required: true,
         default: 0,
     },
-    inPublished: {
+    isPublished: {
         type: Boolean,
         default: true,
 
