@@ -20,7 +20,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         ...(userId ? { owner: mongoose.Types.ObjectId(userId) } : {}),
     };
 
-    const alVideos = await Video.aggregate([
+    const allVideos = await Video.aggregate([
         {
             $match: match
         },
@@ -62,13 +62,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
         },
     ])
 
-    if (!videos?.length) {
+    if (!allVideos?.length) {
         throw new ApiError(404, "Videos are not found");
     }
 
     return res
         .status(200)
-        .json(new ApiResponse(200, videos, "Videos fetched successfully"));
+        .json(new ApiResponse(200, allVideos, "Videos fetched successfully"));
 
 })
 
@@ -172,11 +172,11 @@ const updateVideo = asyncHandler(async (req, res) => {
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid video ID");
     }
-    if (!title && !description && !req.files?.thumbnail) {
+    if (!title && !description && !req.file?.path) {
         throw new ApiError(400, "At least one field (title, description, thumbnail) must be provided for update");
     }
 
-    const thumbnailLocalPath = req.files?.thumbnail[0]?.path
+    const thumbnailLocalPath = req.file?.path
 
     if (!thumbnailLocalPath) {
         throw new ApiError(400, "Thumbnail is required")
