@@ -46,8 +46,9 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     if(!isValidObjectId(commentId)){
         throw new ApiError(401,"Invalid comment ID")
     }
-    if(!res.user){
-        throw new ApiError(400,"Login to Like comment")
+    const user = req.user  
+    if(!user) {
+        throw new ApiError(401,"Login to like the comment")
     }
 
     const commentObjectId= new mongoose.Types.ObjectId(commentId)
